@@ -1,0 +1,27 @@
+{
+	"name": "LighterProxy", 
+	"short_name": "LighterProxy",
+	"version": "1.0.1",  
+	"description": "A lightweight proxy switcher. Lighter Proxeis",  
+	"browser_action": {  
+		"default_icon": {
+			"19": "images/icon19.png",
+			"38": "images/icon38.png"
+		},
+		"default_title": "LightProxy",
+		"default_popup": "popup.html"
+	},
+	"icons": {
+		"16": "images/icon16.png",
+		"24": "images/icon24.png",
+		"48": "images/icon48.png",
+		"96": "images/icon96.png",
+		"128": "images/icon128.png"
+	},
+	"incognito":"spanning",
+	"permissions": ["proxy", "storage", "webRequest", "webRequestBlocking"],
+	"background": {
+		"scripts":["js/jquery-3.2.1.min.js", "js/background.js"]
+	},
+	"manifest_version":2
+} 

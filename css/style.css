@@ -1,0 +1,114 @@
+body {
+	font-family: Arial;
+	font-size: 13px;
+}
+fieldset{
+	margin-top: 5px;
+	border:1px solid #008CBA;
+    -moz-border-radius:8px;
+    -webkit-border-radius:8px;	
+    border-radius:8px;
+    color: black;
+}
+fieldset br {
+    display: block;
+    margin-top: 5px;
+    content: "";
+}
+
+legend{
+	font-style: italic;
+	color: #008CBA;
+}
+
+hr{
+	border: 1px dashed #008CBA;
+}
+
+#container{
+	width: 100%;
+	min-width: 320px;
+}
+#addProxyBtn{
+	margin-top: 5px;
+}
+#txtProxyPort{
+	width: 80px;
+}
+#cancelBtn{
+	float: left;
+}
+#deleteProxyBtn{
+	color: #FF0000;
+	border: 2px solid #FF0000;
+	float: right;
+}
+#deleteProxyBtn:hover{
+	background-color: #FF0000;
+    color: white;
+}
+.editProxyBtn{
+	float:right;
+	margin-top: -2px;
+}
+#txtProfileName {
+	width: 80px;
+}
+
+input[type=radio] {
+	margin-top: -2px;
+	vertical-align: middle;
+}
+
+input[type=radio] + label {
+	font-size:15px;
+	color: #008CBA;
+}
+button {
+	background-color: white; /* Green */
+    border: 2px solid #008CBA;
+    color: black;
+    padding: 2px 10px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 12px;
+    margin: 3px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+button:hover {
+	background-color: #008CBA;
+    color: white;
+}
+button:active {
+	position:relative;
+	top:1px;
+}
+
+input[type=text], input[type=url], input[type=password] {
+	border: 1px solid #008CBA;
+    height: 20px;
+    color: black;
+    padding-left: 6px;
+}
+
+input[type=submit] {
+	color: #527cde;
+}
+
+select {
+    padding: 2px;
+    margin: 0;
+    display: inline-block;
+    cursor:pointer;
+    color: black;
+    border: 1px solid #008CBA;
+    width: 80px;
+}
+
+dialog {
+	max-height: calc(100vh - 10px);
+    overflow-y: auto;
+}
