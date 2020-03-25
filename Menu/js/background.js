@@ -6,7 +6,6 @@ function useProfile(profileKey) {
 	// update key_of_profile_in_use
 	browser.storage.local.get(profileKey).then((profileObj) => {
 		var profile = profileObj[profileKey];
-
 		let proxySettings = {
 			autoConfigUrl: "",
 			autoLogin: true,
@@ -20,7 +19,6 @@ function useProfile(profileKey) {
 			socksVersion: 5,
 			ssl: ""
 		};
-		
 		if (profile.type === "direct") {
 			proxySettings.proxyType = "none";
 		}else if (profile.type === "system"){
@@ -32,7 +30,6 @@ function useProfile(profileKey) {
 			proxySettings.proxyType = "manual";
 			proxySettings.autoLogin = true;
 			proxySettings.passThrough = "localhost, 127.0.0.1/8, 10.0.0.0/8, 192.168.0.0/16, 172.16.0.0/12, .local";
-
 			if (profile.type === "http") {
 				proxySettings.http = profile.host + ":" + profile.port;
 				proxySettings.httpProxyAll = true;
@@ -46,10 +43,11 @@ function useProfile(profileKey) {
 			} else if (profile.type === "socks5") {
 				proxySettings.socksVersion = 5;
 				proxySettings.socks = profile.host+":"+profile.port;
-				proxySettings.proxyDNS = true;
+				proxySettings.proxyDNS = false;
 			}
 		}
 		// update icon
+		//proxySettingss.socks = profile.host + ":" + profile.port;
 		browser.proxy.settings.set({value: proxySettings}).then(function(){
 			updateIcon(profile.type === "direct" || profile.type === "system");
 		});
@@ -57,7 +55,6 @@ function useProfile(profileKey) {
 		browser.storage.local.set({ key_of_profile_in_use: profileKey });
 	});
 }
-
 /*****************************UI Processing**********************************/
 // popup on load
 $(document).ready(function () {
@@ -123,8 +120,62 @@ $(document).on('click', '#addProxyBtn', function () {
 	element.find('#deleteProxyBtn').hide();
 	$('div.addProxy').append(element);
 	$('#addProxyBtn').hide();
+	$('#addProxyListBtn').hide();
+	$('#deleteAllBtn').hide();
 	$('button.editProxyBtn').hide(); // hide all Edit button
 });
+
+$(document).on('click', '#addProxyListBtn', function () {
+	var profileKey = 'user-profile-'+$.now();
+	var element = $('div.hiddenArea > div.proxyProfileList');
+	//element.find('legend').text('New Proxy Profile');
+	//element.find('#submitBtn').data('profileKey', profileKey);
+	element.find('#deleteProxyBtn').hide();
+	$('div.addProxy').append(element);
+	$('#addProxyBtn').hide();
+	$('#addProxyListBtn').hide();
+	$('#deleteAllBtn').hide();
+	$('button.editProxyBtn').hide(); // hide all Edit button
+});
+
+$(document).on('click', '#deleteAllBtn', function () {
+	var profileKey = 'user-profile-'+$.now();
+	var element = $('div.hiddenArea > div.deleteAll');
+	element.find('#deleteProxyBtn').hide();
+	$('div.addProxy').append(element);
+	$('#addProxyBtn').hide();
+	$('#addProxyListBtn').hide();
+	$('#deleteAllBtn').hide();
+	$('button.editProxyBtn').hide(); // hide all Edit button
+});
+
+// All list Proxy
+$(document).on('click', '#submitListBtn', function () {
+	var str = document.getElementById("proxies").value;
+	str = str.trim();
+	var arr = str.split("\n");
+	var ProxyScheme = $('div.proxyProfileList').find('#txtProxyScheme').val();
+	var ProxyScheme = "http";
+		for (var i = 0; i <= arr.length-1; i++) {
+			var ipProxy = arr[i].split(":");	
+			var profileKey = 'user-profile-'+Math.floor(Math.random()*10)+i;
+			var newProxyProfile = {};
+			newProxyProfile[profileKey] = {
+				name: ipProxy[0],
+				type: ProxyScheme,
+				host: ipProxy[0],
+				port: ipProxy[1],
+			};
+			browser.storage.local.set(newProxyProfile);
+			alert(ipProxy[0]);
+		}
+});
+
+// Delete All Proxy
+$(document).on('click', '#submitDeleteAllBtn', function () {
+	browser.storage.local.clear();
+});
+
 
 // Edit ProxyDetails
 $(document).on('click', 'div.proxyProfile > button.editProxyBtn', function () {
@@ -146,6 +197,8 @@ $(document).on('click', 'div.proxyProfile > button.editProxyBtn', function () {
 		element.find('#deleteProxyBtn').show();
 
 		$('#addProxyBtn').hide();
+		$('#addProxyListBtn').hide();
+		$('#deleteAllBtn').hide();
 		$('button.editProxyBtn').hide(); // hide all Edit button
 		currNode.after(element);
 	});
@@ -159,12 +212,6 @@ $(document).on('click', '#submitBtn', function () {
 	var profileType = $('div.proxyProfileDetails').find('#txtProxyScheme').val();
 	var profileHost = $('div.proxyProfileDetails').find('#txtProxyHost').val();
 	var profilePort = parseInt($('div.proxyProfileDetails').find('#txtProxyPort').val());
-	
-	var str = document.getElementById("proxies").value;
-		alert(str);
-
-
-
 
 	// check
 	if (isEmpty(profileName)) {
@@ -207,6 +254,7 @@ $(document).on('click', '#submitBtn', function () {
 	$('div.proxyProfileDetails').detach().appendTo('div.hiddenArea');
 	// show addProxy and editProxyBtn Button
 	$('#addProxyBtn').show();
+	$('#addProxyListBtn').show();
 	$('button.editProxyBtn').show();
 });
 
@@ -366,20 +414,3 @@ browser.storage.onChanged.addListener(function (changes, storageArea) {
 /**************************************************
 * Icons made by [Smashicons] from www.flaticon.com 
 ***************************************************/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

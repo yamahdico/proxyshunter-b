@@ -3,12 +3,16 @@
 	"short_name": "LighterProxy",
 	"version": "1.0.1",  
 	"description": "A lightweight proxy switcher. Lighter Proxeis",  
+	"developer": {
+        "name": "Seyed Mahdi Soheili Moghadam",
+        "url": "https://github.com/yamahdico/"
+		},	
 	"browser_action": {  
 		"default_icon": {
 			"19": "images/icon19.png",
 			"38": "images/icon38.png"
 		},
-		"default_title": "LightProxy",
+		"default_title": "LighterProxy",
 		"default_popup": "popup.html"
 	},
 	"icons": {
@@ -19,7 +23,7 @@
 		"128": "images/icon128.png"
 	},
 	"incognito":"spanning",
-	"permissions": ["proxy", "storage", "webRequest", "webRequestBlocking"],
+	"permissions": ["proxy", "storage", "webRequest", "webRequestBlocking","<all_urls>"],
 	"background": {
 		"scripts":["js/jquery-3.2.1.min.js", "js/background.js"]
 	},
