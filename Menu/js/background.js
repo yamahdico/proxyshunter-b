@@ -1,8 +1,42 @@
+const DIRECT_PROXY = {
+    type: 'direct'
+};
+let proxies = [DIRECT_PROXY];
+var currentProxy = 1;
+
+function settingsChanged(settings) {
+    if ("proxySettings" in settings)
+        proxies[1] = settings.proxySettings.newValue;
+}
+
+function handleProxyRequest(requestInfo) {
+browser.storage.local.get({ currentProxy: 0, proxySettings: DIRECT_PROXY }, items=>{
+    currentProxy = items.currentProxy;
+});
+console.log(currentProxy);
+    return(proxies[currentProxy]);
+}
+
+browser.storage.local.get({ currentProxy: 0, proxySettings: DIRECT_PROXY }, items=>{
+    currentProxy = items.currentProxy;
+    proxies[1] = items.proxySettings;
+	
+	
+	browser.storage.onChanged.addListener(settingsChanged);
+browser.proxy.onRequest.addListener(handleProxyRequest, {urls: ["<all_urls>"]});
+
+	
+});
+
+
+
 function isEmpty(val) {
 	return val === null || val === '' || jQuery.isEmptyObject(val);
 }
 /***************************Proxy Profile***************************************/
 function useProfile(profileKey) {
+	
+
 	// update key_of_profile_in_use
 	browser.storage.local.get(profileKey).then((profileObj) => {
 		var profile = profileObj[profileKey];
@@ -18,15 +52,31 @@ function useProfile(profileKey) {
 			socks: "",
 			socksVersion: 5,
 			ssl: ""
+
 		};
 		if (profile.type === "direct") {
 			proxySettings.proxyType = "none";
+			
+			browser.storage.local.set({ currentProxy: 0 });
+			currentProxy = 0;
+			
 		}else if (profile.type === "system"){
+
+			browser.storage.local.set({ currentProxy: 0 });
+			currentProxy = 0;			
+			
 			proxySettings.proxyType = "system";
 		}else if (profile.type === 'pac') {
 			proxySettings.proxyType = "autoConfig";
 			proxySettings.autoConfigUrl = profile.host;
 		} else {
+			
+			//browser.storage.local.set({ proxySettings: {"name":"http","type":"http","host":"198.98.50.164","port":"8080","proxyDNS":false} });
+			browser.storage.local.set({ proxySettings: {"name":"http","type":"http","host":profile.host,"port":profile.port,"proxyDNS":false} });
+			browser.storage.local.set({ currentProxy: 1 });
+			currentProxy = 1;			
+			
+			
 			proxySettings.proxyType = "manual";
 			proxySettings.autoLogin = true;
 			proxySettings.passThrough = "localhost, 127.0.0.1/8, 10.0.0.0/8, 192.168.0.0/16, 172.16.0.0/12, .local";
@@ -94,6 +144,8 @@ function loadPage() {
 		for (var i = 0; i < profileKeys.length; i++) {
 			var profileKey = profileKeys[i];
 			if (profileKey === 'key_of_profile_in_use') continue;
+			if (profileKey === 'proxySettings') continue;
+			if (profileKey === 'currentProxy') continue;
 			var profile = profilesObj[profileKey];
 
 			var element = $('div.hiddenArea > div.proxyProfile').clone();
@@ -158,7 +210,7 @@ $(document).on('click', '#submitListBtn', function () {
 	var ProxyScheme = "http";
 		for (var i = 0; i <= arr.length-1; i++) {
 			var ipProxy = arr[i].split(":");	
-			var profileKey = 'user-profile-'+Math.floor(Math.random()*10)+i;
+			var profileKey = 'user-profile-'+$.now();
 			var newProxyProfile = {};
 			newProxyProfile[profileKey] = {
 				name: ipProxy[0],
@@ -386,7 +438,7 @@ browser.runtime.onInstalled.addListener(function () {
 					browser.storage.local.set(newData);
 				});
 			} else {
-				browser.storage.sync.get().then((items) => {
+				browser.storage.local.get().then((items) => {
 					if (isEmpty(items) === false) {
 						browser.storage.local.set(items);
 					}
@@ -395,22 +447,6 @@ browser.runtime.onInstalled.addListener(function () {
 		}
 	});
 });
-
-browser.storage.onChanged.addListener(function (changes, storageArea) {
-	/*var storageToBeChanged = storageArea === 'local' ? browser.storage.sync : browser.storage.local;
-	for (key in changes) {
-		var storageChange = changes[key];		
-		if(isEmpty(storageChange.newValue)){
-			storageToBeChanged.remove(key);
-		}else{
-			var obj = {};
-			obj[key] = storageChange.newValue;
-			storageToBeChanged.set(obj);
-		}
-    }*/
-});
-
-
 /**************************************************
 * Icons made by [Smashicons] from www.flaticon.com 
 ***************************************************/

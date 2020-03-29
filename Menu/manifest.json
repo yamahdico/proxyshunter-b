@@ -1,23 +1,23 @@
 {
-	"name": "LighterProxy", 
-	"short_name": "LighterProxy",
-	"version": "1.0.1",  
-	"description": "A lightweight proxy switcher. Lighter Proxeis",  
+	"name": "Proxy Shunter", 
+	"short_name": "ProxyShunter",
+	"version": "0.1.1",  
+	"description": "A lightweight proxy switcher. Proxy Switcher allows you to change proxy easily from the toolbar panel. Toolbar icon indicates the current type of proxy browser currently using. The UI for changing proxies is very intuitive. This includes flexible proxy server list management.",  
 	"developer": {
         "name": "Seyed Mahdi Soheili Moghadam",
         "url": "https://github.com/yamahdico/"
 		},	
 	"browser_action": {  
 		"default_icon": {
-			"19": "images/icon19.png",
-			"38": "images/icon38.png"
+			"32": "images/icon32.png",
+			"64": "images/icon64.png"
 		},
-		"default_title": "LighterProxy",
+		"default_title": "Proxy Shunter",
 		"default_popup": "popup.html"
 	},
 	"icons": {
-		"16": "images/icon16.png",
 		"24": "images/icon24.png",
+		"32": "images/icon32.png",
 		"48": "images/icon48.png",
 		"96": "images/icon96.png",
 		"128": "images/icon128.png"
