@@ -3,40 +3,29 @@ const DIRECT_PROXY = {
 };
 let proxies = [DIRECT_PROXY];
 var currentProxy = 1;
-
 function settingsChanged(settings) {
     if ("proxySettings" in settings)
         proxies[1] = settings.proxySettings.newValue;
 }
-
 function handleProxyRequest(requestInfo) {
-browser.storage.local.get({ currentProxy: 0, proxySettings: DIRECT_PROXY }, items=>{
-    currentProxy = items.currentProxy;
-});
-console.log(currentProxy);
-    return(proxies[currentProxy]);
+	browser.storage.local.get({ currentProxy: 0, proxySettings: DIRECT_PROXY }, items=>{
+		currentProxy = items.currentProxy;
+	});
+	console.log(currentProxy);
+	return(proxies[currentProxy]);
 }
-
 browser.storage.local.get({ currentProxy: 0, proxySettings: DIRECT_PROXY }, items=>{
-    currentProxy = items.currentProxy;
-    proxies[1] = items.proxySettings;
-	
-	
+	currentProxy = items.currentProxy;
+	proxies[1] = items.proxySettings;
 	browser.storage.onChanged.addListener(settingsChanged);
-browser.proxy.onRequest.addListener(handleProxyRequest, {urls: ["<all_urls>"]});
-
-	
+	browser.proxy.onRequest.addListener(handleProxyRequest, {urls: ["<all_urls>"]});
 });
-
-
 
 function isEmpty(val) {
 	return val === null || val === '' || jQuery.isEmptyObject(val);
 }
 /***************************Proxy Profile***************************************/
 function useProfile(profileKey) {
-	
-
 	// update key_of_profile_in_use
 	browser.storage.local.get(profileKey).then((profileObj) => {
 		var profile = profileObj[profileKey];
@@ -52,11 +41,10 @@ function useProfile(profileKey) {
 			socks: "",
 			socksVersion: 5,
 			ssl: ""
-
 		};
 		if (profile.type === "direct") {
 			proxySettings.proxyType = "none";
-			
+
 			browser.storage.local.set({ currentProxy: 0 });
 			currentProxy = 0;
 			
@@ -75,8 +63,7 @@ function useProfile(profileKey) {
 			browser.storage.local.set({ proxySettings: {"name":"http","type":"http","host":profile.host,"port":profile.port,"proxyDNS":false} });
 			browser.storage.local.set({ currentProxy: 1 });
 			currentProxy = 1;			
-			
-			
+					
 			proxySettings.proxyType = "manual";
 			proxySettings.autoLogin = true;
 			proxySettings.passThrough = "localhost, 127.0.0.1/8, 10.0.0.0/8, 192.168.0.0/16, 172.16.0.0/12, .local";
@@ -209,17 +196,21 @@ $(document).on('click', '#submitListBtn', function () {
 	var ProxyScheme = $('div.proxyProfileList').find('#txtProxyScheme').val();
 	var ProxyScheme = "http";
 		for (var i = 0; i <= arr.length-1; i++) {
-			var ipProxy = arr[i].split(":");	
+			var ipProxy = arr[i].split(document.getElementById("split").value);	
 			var profileKey = 'user-profile-'+$.now();
-			var newProxyProfile = {};
-			newProxyProfile[profileKey] = {
-				name: ipProxy[0],
-				type: ProxyScheme,
-				host: ipProxy[0],
-				port: ipProxy[1],
-			};
-			browser.storage.local.set(newProxyProfile);
-			alert(ipProxy[0]);
+			//if (ipProxy[0].match(/\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}/)) {
+			if (ipProxy[0].match(/^(?!0)(?!.*\.$)((1?\d?\d|25[0-5]|2[0-4]\d)(\.|$)){4}$/)) {
+				if(confirm(ipProxy[0]+":"+ipProxy[1])){
+					var newProxyProfile = {};
+					newProxyProfile[profileKey] = {
+						name: ipProxy[0],
+						type: ProxyScheme,
+						host: ipProxy[0].trim(),
+						port: ipProxy[1].trim(),
+					};
+					browser.storage.local.set(newProxyProfile);
+				}
+			}
 		}
 });
 

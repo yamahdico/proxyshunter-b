@@ -62,14 +62,28 @@
 			<table align="center">
 			<tr>
 				<td><label id="lblProxyScheme">Scheme:</label></td>
-				<td><select id="txtProxyScheme">
+				<td>
+					<select id="txtProxyScheme">
 					<option value="http">http</option>
 					<option value="socks4">socks4</option>
 					<option value="socks5">socks5</option>
 					<option value="pac">pac</option>
 					<option value="ftp">ftp</option>
 					<option value="ssl">ssl</option>
-				</select></td>
+					</select>
+				</td>
+			</tr>			
+			<tr>
+				<td><label>Split:</label></td>
+				<td>
+					<select id="split">
+					<option value=" ">Space « »</option>
+					<option value="	">Tab « »</option>
+					<option value=":">Colon «:»</option>
+					<option value=":">Vertical bar «|»</option>
+					</select>
+					</select>
+				</td>
 			</tr>
 			<tr>
 				<td><label id="lblProfileName">Proxies:</label></td>
